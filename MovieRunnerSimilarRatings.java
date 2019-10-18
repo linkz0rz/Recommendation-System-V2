@@ -51,10 +51,74 @@ public class MovieRunnerSimilarRatings {
     public void printSimilarRatings () {
         RaterDatabase.initialize("ratings.csv");
         FourthRatings fr = new FourthRatings();
-        ArrayList<Rating> avgMovieRatings = fr.getSimilarRatings ("65", 20, 5);
+        ArrayList<Rating> avgMovieRatings = fr.getSimilarRatings ("71", 20, 5);
         
         for (Rating r : avgMovieRatings) {
             System.out.println(r.getValue() + " Genre: " + MovieDatabase.getGenres(r.getItem()) + " " + 
+                               MovieDatabase.getYear(r.getItem()) + " " + MovieDatabase.getTitle(r.getItem()));
+        }
+        
+    }
+    
+    public void printSimilarRatingsByGenre () {
+        RaterDatabase.initialize("ratings.csv");
+        FourthRatings fr = new FourthRatings();
+        Filter genreFilter = new GenreFilter("Mystery");
+        ArrayList<Rating> avgMovieRatings = fr.getSimilarRatingsByFilter ("964", 20, 5, genreFilter);
+        
+        for (Rating r : avgMovieRatings) {
+            System.out.println(r.getValue() + " Genre: " + MovieDatabase.getGenres(r.getItem()) + " " + 
+                               MovieDatabase.getYear(r.getItem()) + " " + MovieDatabase.getTitle(r.getItem()));
+        }
+        
+    }
+    
+    public void printSimilarRatingsByDirector () {
+        RaterDatabase.initialize("ratings.csv");
+        FourthRatings fr = new FourthRatings();
+        Filter directorFilter = new DirectorsFilter("Clint Eastwood,J.J. Abrams,Alfred Hitchcock,Sydney Pollack,David Cronenberg,Oliver Stone,Mike Leigh");
+        ArrayList<Rating> avgMovieRatings = fr.getSimilarRatingsByFilter ("120", 10, 2, directorFilter);
+        
+        for (Rating r : avgMovieRatings) {
+            System.out.println(r.getValue() + " Director: " + MovieDatabase.getDirector(r.getItem()) + " " + 
+                               MovieDatabase.getYear(r.getItem()) + " " + MovieDatabase.getTitle(r.getItem()));
+        }
+        
+    }
+    
+    public void printSimilarRatingsByGenreAndMinutes () {
+        RaterDatabase.initialize("ratings.csv");
+        FourthRatings fr = new FourthRatings();
+        AllFilters al = new AllFilters();
+        Filter genreFilter = new GenreFilter("Drama");
+        Filter minutesFilter = new MinutesFilter(80, 160);
+        al.addFilter(genreFilter);
+        al.addFilter(minutesFilter);
+        
+        ArrayList<Rating> avgMovieRatings = fr.getSimilarRatingsByFilter ("168", 10, 3, al);
+        
+        for (Rating r : avgMovieRatings) {
+            System.out.println(r.getValue() + " Genre: " + MovieDatabase.getGenres(r.getItem()) + " Minutes: " 
+                               + MovieDatabase.getMinutes(r.getItem()) + " " +
+                               MovieDatabase.getYear(r.getItem()) + " " + MovieDatabase.getTitle(r.getItem()));
+        }
+        
+    }
+    
+    public void printSimilarRatingsByYearAfterAndMinutes () {
+        RaterDatabase.initialize("ratings.csv");
+        FourthRatings fr = new FourthRatings();
+        AllFilters al = new AllFilters();
+        Filter yearFilter = new YearAfterFilter(1975);
+        Filter minutesFilter = new MinutesFilter(70, 200);
+        al.addFilter(yearFilter);
+        al.addFilter(minutesFilter);
+        
+        ArrayList<Rating> avgMovieRatings = fr.getSimilarRatingsByFilter ("314", 10, 5, al);
+        
+        for (Rating r : avgMovieRatings) {
+            System.out.println(r.getValue() + " Year: " + MovieDatabase.getYear(r.getItem()) + " Minutes: " 
+                               + MovieDatabase.getMinutes(r.getItem()) + " " +
                                MovieDatabase.getYear(r.getItem()) + " " + MovieDatabase.getTitle(r.getItem()));
         }
         

@@ -41,44 +41,43 @@ public class FourthRatings {
     }
     
     public ArrayList<Rating> getSimilarRatingsByFilter (String id, int numSimilarRaters, int minimalRaters, Filter filterCriteria) {
-        ArrayList<Rating> movieSimRatings = new ArrayList();
-	ArrayList<Rating> raterSimList = getSimilarities(id);
-	ArrayList<String> movieIDList = new ArrayList();
+        ArrayList<Rating> movieSimilarRatings = new ArrayList<Rating>();
+	ArrayList<Rating> raterSimilarList = getSimilarities(id);
+	ArrayList<String> movieIDList = new ArrayList<String>();
 
-	HashMap<String,Double> similarMap = new HashMap();
-	int mapSize = getSimilarities(id).size();
-	int minIndex = Math.min(mapSize, numSimilarRaters);
+	HashMap<String,Double> similarMap = new HashMap<String,Double>();
+	int minIndex = Math.min(getSimilarities(id).size(), numSimilarRaters);
 
-	for(Rating similar : getSimilarities(id).subList(0,minIndex)){
-	    if(similar.getValue()>0){
+	for (Rating similar : getSimilarities(id).subList(0, minIndex)) {
+	    if (similar.getValue() > 0) {
 	        similarMap.put(similar.getItem(), similar.getValue());
 	    }
 	}
 
-        for(String movieID : MovieDatabase.filterBy(filterCriteria)){
+        for (String movieID : MovieDatabase.filterBy(filterCriteria)) {
 	    int count = 0;
 	    double total = 0;
 
-	    for(Rater curRater : RaterDatabase.getRaters()){
+	    for (Rater rater : RaterDatabase.getRaters()) {
 	        double rating = -1;
-		if (similarMap.containsKey(curRater.getID()) && curRater.hasRating(movieID)){
-		    rating = curRater.getRating(movieID) * similarMap.get(curRater.getID());
+		if (similarMap.containsKey(rater.getID()) && rater.hasRating(movieID)) {
+		    rating = rater.getRating(movieID) * similarMap.get(rater.getID());
 		}
-                if (rating == -1){}
-                else {
+                if (rating == -1) {
+                } else {
 		    count++;
 		    total = total + rating;
 		}
 	    }
 
-	    if(count< minimalRaters || total == 0){}
-	    else {
-                movieSimRatings.add(new Rating(movieID, total/count));
+	    if (count < minimalRaters || total == 0) {
+	    } else {
+                movieSimilarRatings.add(new Rating(movieID, total/count));
 	    }
 
 	}
-        Collections.sort(movieSimRatings, Collections.reverseOrder());
-        return movieSimRatings;
+        Collections.sort(movieSimilarRatings, Collections.reverseOrder());
+        return movieSimilarRatings;
     }
     
     private double getAverageByIDSimilar (String id, ArrayList<Rater> raters, int minimalRaters) {
